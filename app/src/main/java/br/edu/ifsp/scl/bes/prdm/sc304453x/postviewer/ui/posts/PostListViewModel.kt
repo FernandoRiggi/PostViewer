@@ -18,7 +18,7 @@ class PostListViewModel(
         loadPosts()
     }
 
-    private fun loadPosts() {
+    fun loadPosts() {
         viewModelScope.launch {
             _uiState.value = PostListUiState(isLoading = true)
 
