@@ -71,6 +71,8 @@ fun AppNavigation(
 
             PostDetailsScreen(
                 uiState = uiState,
+                onCommentTextChange = postDetailsViewModel::onCommentTextChange,
+                onAddCommentClick = postDetailsViewModel::addLocalComment,
                 onRetryClick = postDetailsViewModel::loadComments,
                 onBackClick = {
                     navController.popBackStack()

@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +25,8 @@ import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.domain.model.Comment
 @Composable
 fun PostDetailsScreen(
     uiState: PostDetailsUiState,
+    onCommentTextChange: (String) -> Unit,
+    onAddCommentClick: () -> Unit,
     onRetryClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -36,6 +39,14 @@ fun PostDetailsScreen(
         ) {
             Text(text = "Voltar")
         }
+
+        AddCommentForm(
+            commentText = uiState.newCommentText,
+            onCommentTextChange = onCommentTextChange,
+            onAddCommentClick = onAddCommentClick
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         when {
             uiState.isLoading -> {
@@ -58,6 +69,35 @@ fun PostDetailsScreen(
     }
 }
 
+@Composable
+private fun AddCommentForm(
+    commentText: String,
+    onCommentTextChange: (String) -> Unit,
+    onAddCommentClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        OutlinedTextField(
+            value = commentText,
+            onValueChange = onCommentTextChange,
+            label = {
+                Text(text = "Novo comentário")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onAddCommentClick,
+            enabled = commentText.isNotBlank(),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Adicionar comentário")
+        }
+    }
+}
 @Composable
 private fun LoadingContent() {
     Box(
@@ -108,7 +148,6 @@ private fun CommentListContent(
         }
     }
 }
-
 @Composable
 private fun CommentItem(
     comment: Comment
@@ -139,10 +178,18 @@ private fun CommentItem(
                 text = comment.body,
                 style = MaterialTheme.typography.bodyMedium
             )
+
+            if (comment.isLocal) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Comentário local",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun PostDetailsScreenSuccessPreview() {
@@ -154,17 +201,20 @@ private fun PostDetailsScreenSuccessPreview() {
                     postId = 1,
                     name = "Comentário de exemplo",
                     email = "usuario@email.com",
-                    body = "Esse é um comentário exibido no preview."
+                    body = "Esse é um comentário vindo da API."
                 ),
                 Comment(
                     id = 2,
                     postId = 1,
-                    name = "Outro comentário",
-                    email = "outro@email.com",
-                    body = "Mais um comentário para testar a lista."
+                    name = "Comentário local",
+                    email = "local@postviewer.com",
+                    body = "Esse comentário foi salvo localmente no dispositivo.",
+                    isLocal = true
                 )
             )
         ),
+        onCommentTextChange = {},
+        onAddCommentClick = {},
         onRetryClick = {},
         onBackClick = {}
     )
@@ -177,6 +227,8 @@ private fun PostDetailsScreenLoadingPreview() {
         uiState = PostDetailsUiState(
             isLoading = true
         ),
+        onCommentTextChange = {},
+        onAddCommentClick = {},
         onRetryClick = {},
         onBackClick = {}
     )
@@ -189,6 +241,8 @@ private fun PostDetailsScreenErrorPreview() {
         uiState = PostDetailsUiState(
             errorMessage = "Não foi possível carregar os comentários."
         ),
+        onCommentTextChange = {},
+        onAddCommentClick = {},
         onRetryClick = {},
         onBackClick = {}
     )
