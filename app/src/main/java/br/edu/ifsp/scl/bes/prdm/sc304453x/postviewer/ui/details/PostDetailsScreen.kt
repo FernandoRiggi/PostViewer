@@ -60,12 +60,33 @@ fun PostDetailsScreen(
                 )
             }
 
+            uiState.comments.isEmpty() -> {
+                EmptyContent(message = "Nenhum comentário encontrado.")
+            }
+
             else -> {
                 CommentListContent(
                     comments = uiState.comments
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun EmptyContent(
+    message: String
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 

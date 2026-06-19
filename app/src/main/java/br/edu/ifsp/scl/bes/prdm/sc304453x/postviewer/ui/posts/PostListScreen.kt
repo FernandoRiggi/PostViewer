@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.domain.model.Post
-
 @Composable
 fun PostListScreen(
     uiState: PostListUiState,
@@ -40,12 +39,33 @@ fun PostListScreen(
             )
         }
 
+        uiState.posts.isEmpty() -> {
+            EmptyContent(message = "Nenhum post encontrado.")
+        }
+
         else -> {
             PostListContent(
                 posts = uiState.posts,
                 onPostClick = onPostClick
             )
         }
+    }
+}
+
+@Composable
+private fun EmptyContent(
+    message: String
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 
