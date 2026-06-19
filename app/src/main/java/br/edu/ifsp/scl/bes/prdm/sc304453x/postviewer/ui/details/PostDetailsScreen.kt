@@ -31,9 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.domain.model.Comment
-import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.domain.model.Post
-import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.posts.PostListScreen
-import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.posts.PostListUiState
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.theme.PostViewerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -237,9 +234,9 @@ private fun CommentItem(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = comment.email,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                text = comment.body,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -301,20 +298,32 @@ private fun EmptyContent(
 }
 @Preview(showBackground = true)
 @Composable
-private fun PostListScreenSuccessPreview() {
+private fun PostDetailsScreenSuccessPreview() {
     PostViewerTheme {
-        PostListScreen(
-            uiState = PostListUiState(
-                posts = listOf(
-                    Post(
+        PostDetailsScreen(
+            uiState = PostDetailsUiState(
+                comments = listOf(
+                    Comment(
                         id = 1,
-                        title = "Título do primeiro post",
-                        body = "Esse é o corpo do primeiro post exibido no preview."
+                        postId = 1,
+                        name = "Comentário de exemplo",
+                        email = "usuario@email.com",
+                        body = "Esse é um comentário vindo da API."
+                    ),
+                    Comment(
+                        id = 2,
+                        postId = 1,
+                        name = "Comentário local",
+                        email = "local@postviewer.com",
+                        body = "Esse comentário foi salvo localmente no dispositivo.",
+                        isLocal = true
                     )
                 )
             ),
-            onPostClick = {},
-            onRetryClick = {}
+            onCommentTextChange = {},
+            onAddCommentClick = {},
+            onRetryClick = {},
+            onBackClick = {}
         )
     }
 }
