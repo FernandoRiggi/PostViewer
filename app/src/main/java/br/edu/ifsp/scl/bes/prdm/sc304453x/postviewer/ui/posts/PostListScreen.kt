@@ -131,6 +131,13 @@ private fun PostItem(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
+                text = "${post.commentsCount} comentários",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
                 text = post.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,

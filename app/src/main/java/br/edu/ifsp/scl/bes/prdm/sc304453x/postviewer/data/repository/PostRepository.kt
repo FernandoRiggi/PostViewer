@@ -13,11 +13,27 @@ class PostRepository(
     private val localCommentDao: LocalCommentDao
 ) {
     suspend fun getPosts(): List<Post> {
-        return postApi.getPosts().map { postDto ->
+        val posts = postApi.getPosts()
+        val comments = postApi.getComments()
+        val localComments = localCommentDao.getLocalComments()
+
+        val commentsCountApi = comments.groupingBy { commentDto ->
+        commentDto.postId
+        }.eachCount()
+
+        val commentsCountLocal = localComments.groupingBy { commentEntity ->
+            commentEntity.postId
+        }.eachCount()
+
+        return posts.map { postDto ->
+            val localCommentCount = commentsCountLocal[postDto.id] ?: 0
+            val apiCommentCount = commentsCountApi[postDto.id] ?: 0
+            val commentsCount = localCommentCount + apiCommentCount
             Post(
                 id = postDto.id,
                 title = postDto.title,
-                body = postDto.body
+                body = postDto.body,
+                commentsCount = commentsCount
             )
         }
     }

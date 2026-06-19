@@ -14,4 +14,7 @@ interface PostApi {
     suspend fun getCommentsByPostId(
         @Path("id") postId: Int
     ): List<CommentDto>
+
+    @GET("comments")
+    suspend fun getComments(): List<CommentDto>
 }

@@ -20,4 +20,13 @@ interface LocalCommentDao {
 
     @Insert
     suspend fun insertComment(comment: LocalCommentEntity)
+
+    @Query(
+        """
+            SELECT *
+            FROM local_comments
+            ORDER BY createdAt DESC
+        """
+    )
+    suspend fun getLocalComments(): List<LocalCommentEntity>
 }
