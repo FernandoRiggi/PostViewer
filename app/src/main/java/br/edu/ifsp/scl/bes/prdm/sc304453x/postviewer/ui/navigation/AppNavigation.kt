@@ -15,6 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.data.repository.PostRepository
+import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.details.PostDetailsScreen
+import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.details.PostDetailsViewModel
+import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.details.PostDetailsViewModelFactory
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.posts.PostListScreen
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.posts.PostListViewModel
 import br.edu.ifsp.scl.bes.prdm.sc304453x.postviewer.ui.posts.PostListViewModelFactory
@@ -57,12 +60,22 @@ fun AppNavigation(
                 ?.getInt(AppRoute.PostDetails.ARG_POST_ID)
                 ?: return@composable
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Detalhes do post $postId")
-            }
+            val postDetailsViewModel: PostDetailsViewModel = viewModel(
+                factory = PostDetailsViewModelFactory(
+                    postId = postId,
+                    repository = repository
+                )
+            )
+
+            val uiState by postDetailsViewModel.uiState.collectAsStateWithLifecycle()
+
+            PostDetailsScreen(
+                uiState = uiState,
+                onRetryClick = postDetailsViewModel::loadComments,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
